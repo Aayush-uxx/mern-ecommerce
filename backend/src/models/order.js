@@ -14,10 +14,10 @@ const orderSchema = mongoose.Schema({
       Object: {
         street: { type: String },
         city: { type: String, required: true },
-        phone: { type: Number, required: true },
+        phone: { type: String, required: true },
       },
     },
   ],
   status: { type: String, default: "Pending" },
 });
-export default mongoose.Schema("order", orderSchema);
+export default mongoose.model("order", orderSchema);
