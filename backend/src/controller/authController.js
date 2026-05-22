@@ -44,15 +44,13 @@ const loginUser = async (req, res) => {
     if (!checkPassword) {
       return res.status(500).json({ message: "Invalid credential" });
     }
-    res
-      .status(200)
-      .json({
-        message: "Login successfully",
-        token: generateToken(userExist._id),
-        id: userExist._id,
-        name: userExist.name,
-        email: userExist.email,
-      });
+    res.status(200).json({
+      message: "Login successfully",
+      token: generateToken(userExist._id),
+      id: userExist._id,
+      name: userExist.name,
+      email: userExist.email,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
