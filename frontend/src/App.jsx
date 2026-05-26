@@ -1,13 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { Toaster } from "sonner";
-import { toast } from "sonner";
+import Layout from "./components/layout/layout";
+import Home from "./pages/home";
 
 function App() {
   return (
-    <div className="p-8">
-      <Toaster />
-      <Button onClick={() => toast.success("Buttton clciked")}>Click Me</Button>
-    </div>
+    <Layout>
+      <Home />
+    </Layout>
   );
 }
 export default App;
