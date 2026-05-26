@@ -4,6 +4,23 @@ import generateToken from "../utils/generateToken.js";
 //registerUser
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
+  if (!name || name.trim().length < 2) {
+    return res
+      .status(400)
+      .json({ message: "Name must be at least 2 characters" });
+  }
+
+  if (!email || !email.includes("@") || !email.includes(".")) {
+    return res
+      .status(400)
+      .json({ message: "Please enter a valid email address" });
+  }
+
+  if (!password || password.length < 6) {
+    return res
+      .status(400)
+      .json({ message: "Password must be at least 6 characters" });
+  }
   try {
     const userExists = await User.findOne({ email });
     if (userExists) {

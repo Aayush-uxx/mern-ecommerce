@@ -1,5 +1,4 @@
 import product from "../models/product.js";
-
 const getProducts = async (req, res) => {
   try {
     const products = await product.find({});
@@ -25,6 +24,31 @@ const getProductById = async (req, res) => {
 
 const createProduct = async (req, res) => {
   const { name, price, description, category, stock, image } = req.body;
+  if (!name || name.length < 3) {
+    return res
+      .status(400)
+      .json({ message: "Name must be at least 3 characters" });
+  }
+
+  if (!price || price <= 0 || typeof price !== "number") {
+    return res
+      .status(400)
+      .json({ message: "Valid price greater than 0 is required" });
+  }
+
+  if (!description || description.length < 10) {
+    return res
+      .status(400)
+      .json({ message: "Description must be at least 10 characters" });
+  }
+
+  if (!category) {
+    return res.status(400).json({ message: "Category is required" });
+  }
+
+  if (stock < 0) {
+    return res.status(400).json({ message: "Stock cannot be negative" });
+  }
   try {
     const products = await product.create({
       name,
@@ -53,6 +77,29 @@ const createProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   const { id } = req.params;
   const { name, price, description, category, stock, image } = req.body;
+  if (name !== undefined && name.length < 3) {
+    return res
+      .status(400)
+      .json({ message: "Name must be at least 3 characters" });
+  }
+
+  if (price !== undefined && (price <= 0 || typeof price !== "number")) {
+    return res.status(400).json({ message: "Price must be greater than 0" });
+  }
+
+  if (description !== undefined && description.length < 10) {
+    return res
+      .status(400)
+      .json({ message: "Description must be at least 10 characters" });
+  }
+
+  if (category !== undefined && !category) {
+    return res.status(400).json({ message: "Category cannot be empty" });
+  }
+
+  if (stock !== undefined && stock < 0) {
+    return res.status(400).json({ message: "Stock cannot be negative" });
+  }
   try {
     const updateProduct = await product.findByIdAndUpdate(
       id,
