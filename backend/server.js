@@ -3,13 +3,14 @@ import dbConnect from "./src/config/db.js";
 import authRoutes from "./src/routes/authRoutes.js";
 import productRoutes from "./src/routes/productRoutes.js";
 import orderRoutes from "./src/routes/orderRoutes.js";
-
+import cors from "cors";
 dbConnect();
 
 const app = express();
 const PORT = 5000;
 
 app.use(express.json());
+app.use(cors());
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);

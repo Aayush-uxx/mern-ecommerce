@@ -1,5 +1,5 @@
 import Layout from "../components/layout/layout";
-
+import {Button} from "@/components/ui/button";
 const Contact = () => {
   return (
     <Layout>
@@ -16,7 +16,7 @@ const Contact = () => {
               <input
                 type="text"
                 placeholder="Name"
-                className="border p-2 w-full mb-2 rounded"
+                className="border p-2 w-full mb-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <input
                 type="email"
@@ -28,9 +28,9 @@ const Contact = () => {
                 className="border p-2 w-full mb-2 rounded"
                 rows="4"
               ></textarea>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded">
+              <Button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-900 transition duration-300 w-full">
                 Send
-              </button>
+              </Button>
             </form>
           </div>
         </div>

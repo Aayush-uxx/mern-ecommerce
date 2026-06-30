@@ -9,10 +9,11 @@ import Register from "./pages/register";
 import ProductDetail from "./pages/productDetail";
 import CategoryPage from "./pages/categoryPage";
 import AdminPage from "./pages/adminPage";
-
+import { Toaster } from "react-hot-toast";
 function App() {
   return (
     <BrowserRouter>
+    <Toaster position="bottom-right" />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
