@@ -8,12 +8,15 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import ProductDetail from "./pages/productDetail";
 import CategoryPage from "./pages/categoryPage";
-import AdminPage from "./pages/adminPage";
+import AdminPage from "./pages/admin/adminPage";
+import AdminProducts from "./pages/admin/adminProducts";
+import ProtectedRoute from "./components/ProtectedRoute";
 import { Toaster } from "react-hot-toast";
+
 function App() {
   return (
     <BrowserRouter>
-    <Toaster position="bottom-right" />
+      <Toaster position="bottom-right" />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
@@ -24,7 +27,16 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/admin" element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/products" element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminProducts />
+          </ProtectedRoute>
+        } />
       </Routes>
     </BrowserRouter>
   );
