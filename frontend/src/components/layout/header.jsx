@@ -1,28 +1,53 @@
-import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Menu, X, ShoppingCart } from "lucide-react";
 import { Button } from "../ui/button";
 import useAuth from "@/hooks/useAuth";
 import { useState } from "react";
-import useClickOutside from "@/hooks/useCloseDrop";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+
 const Header = () => {
   const { handleLogout, user, token } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const dropDownRef = useClickOutside(()=>{dropdownOpen(false)});
+  const [loginPromptOpen, setLoginPromptOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleCartClick = (e) => {
+    if (!token) {
+      e.preventDefault();
+      setLoginPromptOpen(true);
+    }
+  };
+
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+        {/* Logo */}
         <div className="text-2xl font-bold text-blue-600">
           <Link to="/">LaliMart</Link>
         </div>
+
+        {/* Desktop Nav */}
         <div className="hidden md:flex gap-6 items-center">
           <Link to="/" className="hover:text-blue-600 transition">Home</Link>
           <Link to="/products" className="hover:text-blue-600 transition">Products</Link>
           <Link to="/about" className="hover:text-blue-600 transition">About</Link>
           <Link to="/contact" className="hover:text-blue-600 transition">Contact</Link>
-          <Link to="/cart" >🛒</Link>
+
+          {/* Cart Icon */}
+          <Link to="/cart" onClick={handleCartClick} className="hover:text-blue-600 transition">
+            <ShoppingCart className="h-5 w-5" />
+          </Link>
+
           {token ? (
-            <div className="relative" ref={dropDownRef}>
+            <div className="relative">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="bg-blue-600 text-white rounded-full w-9 h-9 font-bold flex items-center justify-center hover:bg-blue-700 transition"
@@ -35,14 +60,21 @@ const Header = () => {
                     <p className="text-sm font-semibold text-gray-800">{user?.name}</p>
                     <p className="text-xs text-gray-400">{user?.email}</p>
                   </div>
-                  <Link to="/dashboard" onClick={() => setDropdownOpen(false)} className="block px-4 py-2 text-sm hover:bg-gray-50 transition">
-                    📊 Dashboard
-                  </Link>
-                  <Link to="/orders" onClick={() => setDropdownOpen(false)} className="block px-4 py-2 text-sm hover:bg-gray-50 transition">
+                  {user?.isAdmin && (
+                    <Link
+                      to="/admin"
+                      onClick={() => setDropdownOpen(false)}
+                      className="block px-4 py-2 text-sm hover:bg-gray-50 transition"
+                    >
+                      🛠 Admin Panel
+                    </Link>
+                  )}
+                  <Link
+                    to="/orders"
+                    onClick={() => setDropdownOpen(false)}
+                    className="block px-4 py-2 text-sm hover:bg-gray-50 transition"
+                  >
                     🛍️ Purchase History
-                  </Link>
-                  <Link to="/settings" onClick={() => setDropdownOpen(false)} className="block px-4 py-2 text-sm hover:bg-gray-50 transition">
-                    ⚙️ Settings
                   </Link>
                   <hr className="my-1 border-gray-100" />
                   <button
@@ -55,11 +87,16 @@ const Header = () => {
               )}
             </div>
           ) : (
-            <Link to="/login" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm">
+            <Link
+              to="/login"
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm"
+            >
               Login
             </Link>
           )}
         </div>
+
+        {/* Mobile menu toggle */}
         <Button
           variant="ghost"
           size="icon"
@@ -68,18 +105,21 @@ const Header = () => {
         >
           <Menu className="h-5 w-5" />
         </Button>
-
       </div>
+
+      {/* Mobile overlay */}
       {mobileMenuOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 md:hidden"
           onClick={() => setMobileMenuOpen(false)}
-        ></div>
+        />
       )}
+
+      {/* Mobile drawer */}
       <div
         className={`fixed top-0 right-0 h-full w-72 bg-white shadow-xl z-50 md:hidden
-        transform transition-transform duration-300 ease-in-out
-        ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}
+          transform transition-transform duration-300 ease-in-out
+          ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="flex justify-between items-center p-4 border-b">
           <span className="text-lg font-bold text-blue-600">Menu</span>
@@ -92,30 +132,71 @@ const Header = () => {
           <Link to="/products" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-600">Products</Link>
           <Link to="/about" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-600">About</Link>
           <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-600">Contact</Link>
-          <hr className="my-2" />
+          <Link
+            to="/cart"
+            onClick={(e) => { setMobileMenuOpen(false); handleCartClick(e); }}
+            className="hover:text-blue-600 flex items-center gap-2"
+          >
+            <ShoppingCart className="h-4 w-4" /> Cart
+          </Link>
+          <hr className="my-1" />
           {token ? (
-            <div ref={dropDownRef}>
-              <div className="mb-2">
+            <div>
+              <div className="mb-3">
                 <p className="text-sm font-semibold text-gray-800">{user?.name}</p>
                 <p className="text-xs text-gray-400">{user?.email}</p>
               </div>
-              <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-600">📊 Dashboard</Link>
-              <Link to="/orders" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-600">🛍️ Purchase History</Link>
-              <Link to="/settings" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-600">⚙️ Settings</Link>
+              {user?.isAdmin && (
+                <Link to="/admin" onClick={() => setMobileMenuOpen(false)} className="block mb-2 hover:text-blue-600">
+                  🛠 Admin Panel
+                </Link>
+              )}
+              <Link to="/orders" onClick={() => setMobileMenuOpen(false)} className="block mb-2 hover:text-blue-600">
+                🛍️ Purchase History
+              </Link>
               <button
                 onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
-                className="text-left text-red-500"
+                className="text-left text-red-500 hover:text-red-700"
               >
                 🚪 Logout
               </button>
             </div>
           ) : (
-            <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="bg-blue-600 text-white text-center py-2 rounded-lg">
+            <Link
+              to="/login"
+              onClick={() => setMobileMenuOpen(false)}
+              className="bg-blue-600 text-white text-center py-2 rounded-lg"
+            >
               Login
             </Link>
           )}
         </div>
       </div>
+
+      {/* Login Required Dialog */}
+      <Dialog open={loginPromptOpen} onOpenChange={setLoginPromptOpen}>
+        <DialogContent className="max-w-sm" showCloseButton={false}>
+          <DialogHeader>
+            <DialogTitle>Login Required</DialogTitle>
+            <DialogDescription>
+              You need to be logged in to access your cart.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setLoginPromptOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                setLoginPromptOpen(false);
+                navigate("/login");
+              }}
+            >
+              Go to Login
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 };

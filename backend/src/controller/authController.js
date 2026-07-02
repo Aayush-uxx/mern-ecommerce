@@ -37,10 +37,11 @@ const registerUser = async (req, res) => {
     res.status(201).json({
       message: "User created sccesfully",
       token: generateToken(user._id),
-      User: {
-        user: user._id,
+      user: {
+        id: user._id,
         name: user.name,
         email: user.email,
+        isAdmin: user.isAdmin,
       },
     });
   } catch (error) {
@@ -53,24 +54,49 @@ const loginUser = async (req, res) => {
   try {
     const userExist = await User.findOne({ email });
     if (!userExist) {
-      return res.status(500).json({ message: "Invalid credential" });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     const checkPassword = await bcrypt.compare(password, userExist.password);
 
     if (!checkPassword) {
-      return res.status(500).json({ message: "Invalid credential" });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
     res.status(200).json({
       message: "Login successfully",
       token: generateToken(userExist._id),
-      id: userExist._id,
-      name: userExist.name,
-      email: userExist.email,
+      user: {
+        id: userExist._id,
+        name: userExist.name,
+        email: userExist.email,
+        isAdmin: userExist.isAdmin,
+      },
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-export { registerUser, loginUser };
+const getUsers = async (req, res) => {
+  try {
+    const users = await User.find({}).select("-password");
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findByIdAndDelete(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export { registerUser, loginUser, getUsers, deleteUser };

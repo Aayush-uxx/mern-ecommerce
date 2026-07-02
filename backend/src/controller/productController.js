@@ -23,14 +23,18 @@ const getProductById = async (req, res) => {
 };
 
 const createProduct = async (req, res) => {
-  const { name, price, description, category, stock, image } = req.body;
+  const { name, description, category } = req.body;
+  const price = parseFloat(req.body.price);
+  const stock = parseInt(req.body.stock, 10);
+  const imagePath = req.file ? req.file.path.replace(/\\/g, "/") : req.body.image;
+
   if (!name || name.length < 3) {
     return res
       .status(400)
       .json({ message: "Name must be at least 3 characters" });
   }
 
-  if (!price || price <= 0 || typeof price !== "number") {
+  if (!price || isNaN(price) || price <= 0) {
     return res
       .status(400)
       .json({ message: "Valid price greater than 0 is required" });
@@ -46,7 +50,7 @@ const createProduct = async (req, res) => {
     return res.status(400).json({ message: "Category is required" });
   }
 
-  if (stock < 0) {
+  if (isNaN(stock) || stock < 0) {
     return res.status(400).json({ message: "Stock cannot be negative" });
   }
   try {
@@ -56,7 +60,7 @@ const createProduct = async (req, res) => {
       description,
       category,
       stock,
-      image,
+      image: imagePath,
     });
     if (!products) {
       res.status(400).json({ message: "Failed to create product" });
@@ -76,14 +80,17 @@ const createProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   const { id } = req.params;
-  const { name, price, description, category, stock, image } = req.body;
+  const { name, description, category } = req.body;
+  const price = req.body.price !== undefined ? parseFloat(req.body.price) : undefined;
+  const stock = req.body.stock !== undefined ? parseInt(req.body.stock, 10) : undefined;
+
   if (name !== undefined && name.length < 3) {
     return res
       .status(400)
       .json({ message: "Name must be at least 3 characters" });
   }
 
-  if (price !== undefined && (price <= 0 || typeof price !== "number")) {
+  if (price !== undefined && (isNaN(price) || price <= 0)) {
     return res.status(400).json({ message: "Price must be greater than 0" });
   }
 
@@ -97,13 +104,16 @@ const updateProduct = async (req, res) => {
     return res.status(400).json({ message: "Category cannot be empty" });
   }
 
-  if (stock !== undefined && stock < 0) {
+  if (stock !== undefined && (isNaN(stock) || stock < 0)) {
     return res.status(400).json({ message: "Stock cannot be negative" });
   }
   try {
+    const updateFields = { name, description, category };
+    if (price !== undefined) updateFields.price = price;
+    if (stock !== undefined) updateFields.stock = stock;
     const updateProduct = await product.findByIdAndUpdate(
       id,
-      { name, price, description, category, stock, image },
+      updateFields,
       { new: true }
     );
     if (!updateProduct) {

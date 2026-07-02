@@ -15,7 +15,11 @@ const useAuth = () => {
       const data = await loginUser(email, password);
       login(data.user, data.token);
       toast.success("Logged in successfully!");
-      navigate("/");
+      if (data.user.isAdmin) {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       toast.error("Invalid email or password!");
     } finally {

@@ -5,7 +5,7 @@ const ProtectedRoute = ({ children, requiredRole }) => {
   if (!token) {
     return <Navigate to="/login" replace />;
   }
-  if (requiredRole && user?.role !== requiredRole) {
+  if (requiredRole === "admin" && !user?.isAdmin) {
     return <Navigate to="/" replace />;
   }
   return children;
