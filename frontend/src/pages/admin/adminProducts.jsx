@@ -102,8 +102,6 @@ function AdminProducts() {
           Add Product
         </Button>
       </div>
-
-      {/* Products Table */}
       <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
         <Table>
           <TableHeader>
@@ -182,8 +180,6 @@ function AdminProducts() {
           </TableBody>
         </Table>
       </div>
-
-      {/* Add / Edit Dialog */}
       <Dialog open={showForm} onOpenChange={(open) => { if (!open) closeForm(); }}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
@@ -291,8 +287,6 @@ function AdminProducts() {
           </form>
         </DialogContent>
       </Dialog>
-
-      {/* Delete Confirmation Dialog */}
       <Dialog
         open={!!deleteConfirmId}
         onOpenChange={(open) => { if (!open) setDeleteConfirmId(null); }}

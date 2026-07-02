@@ -96,8 +96,6 @@ function AdminUsers() {
           </TableBody>
         </Table>
       </div>
-
-      {/* Delete Confirmation */}
       <Dialog
         open={!!deleteConfirmId}
         onOpenChange={(open) => { if (!open) setDeleteConfirmId(null); }}
