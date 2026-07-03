@@ -9,7 +9,7 @@ export const getAllProducts = async () => {
 };
 export const createProduct = async ({
   name,
-  price,
+  price,  
   description,
   category,
   stock,

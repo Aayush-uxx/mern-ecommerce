@@ -15,5 +15,5 @@ const orderSchema = mongoose.Schema({
     phone: { type: String, required: true },
   },
   status: { type: String, default: "Pending" },
-});
+},{timestamps:true});
 export default mongoose.model("order", orderSchema);
