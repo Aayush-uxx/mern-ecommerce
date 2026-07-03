@@ -9,15 +9,11 @@ const orderSchema = mongoose.Schema({
     },
   ],
   totalAmount: { type: Number, required: true },
-  shippingAddress: [
-    {
-      Object: {
-        street: { type: String },
-        city: { type: String, required: true },
-        phone: { type: String, required: true },
-      },
-    },
-  ],
+  shippingAddress: {
+    street: { type: String },
+    city: { type: String, required: true },
+    phone: { type: String, required: true },
+  },
   status: { type: String, default: "Pending" },
 });
 export default mongoose.model("order", orderSchema);

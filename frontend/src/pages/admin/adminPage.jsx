@@ -36,7 +36,6 @@ const AdminPage = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
       <aside className="w-60 bg-gray-900 text-white flex flex-col fixed h-full z-10">
         <div className="p-5 border-b border-gray-700">
           <div className="flex items-center gap-2 mb-1">
@@ -73,8 +72,6 @@ const AdminPage = () => {
           </button>
         </div>
       </aside>
-
-      {/* Main content */}
       <div className="flex-1 flex flex-col ml-60">
         <header className="bg-white border-b px-6 py-4 sticky top-0 z-10">
           <h1 className="text-xl font-semibold text-gray-800 capitalize">{activeTab}</h1>
@@ -107,8 +104,6 @@ const AdminPage = () => {
                   </Button>
                 </div>
               </div>
-
-              {/* Recent products summary */}
               <div className="bg-white rounded-xl shadow-sm border p-6">
                 <h3 className="font-semibold text-gray-800 mb-3">Recent Products</h3>
                 {products.length === 0 ? (
