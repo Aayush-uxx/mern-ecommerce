@@ -17,6 +17,7 @@ const useAuthStore = create((set) => ({
     localStorage.setItem("user", JSON.stringify(user));
     set({ user, token });
   },
+  user: JSON.parse(localStorage.getItem("user")) || null,
   logout: () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");

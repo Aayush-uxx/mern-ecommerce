@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, ShoppingCart } from "lucide-react";
 import { Button } from "../ui/button";
 import useAuth from "@/hooks/useAuth";
+import useCart from "@/hooks/useCart";
 import { useState } from "react";
 import {
   Dialog,
@@ -14,6 +15,7 @@ import {
 
 const Header = () => {
   const { handleLogout, user, token } = useAuth();
+  const { totalItems } = useCart();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginPromptOpen, setLoginPromptOpen] = useState(false);
@@ -29,21 +31,21 @@ const Header = () => {
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        {/* Logo */}
         <div className="text-2xl font-bold text-blue-600">
           <Link to="/">LaliMart</Link>
         </div>
-
-        {/* Desktop Nav */}
         <div className="hidden md:flex gap-6 items-center">
           <Link to="/" className="hover:text-blue-600 transition">Home</Link>
           <Link to="/products" className="hover:text-blue-600 transition">Products</Link>
           <Link to="/about" className="hover:text-blue-600 transition">About</Link>
           <Link to="/contact" className="hover:text-blue-600 transition">Contact</Link>
-
-          {/* Cart Icon */}
-          <Link to="/cart" onClick={handleCartClick} className="hover:text-blue-600 transition">
+          <Link to="/cart" onClick={handleCartClick} className="hover:text-blue-600 transition relative">
             <ShoppingCart className="h-5 w-5" />
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                {totalItems}
+              </span>
+            )}
           </Link>
 
           {token ? (
@@ -61,20 +63,18 @@ const Header = () => {
                     <p className="text-xs text-gray-400">{user?.email}</p>
                   </div>
                   {user?.isAdmin && (
-                    <Link
-                      to="/admin"
-                      onClick={() => setDropdownOpen(false)}
-                      className="block px-4 py-2 text-sm hover:bg-gray-50 transition"
-                    >
+                    <Link to="/admin" onClick={() => setDropdownOpen(false)} className="block px-4 py-2 text-sm hover:bg-gray-50 transition">
                       🛠 Admin Panel
                     </Link>
                   )}
-                  <Link
-                    to="/orders"
-                    onClick={() => setDropdownOpen(false)}
-                    className="block px-4 py-2 text-sm hover:bg-gray-50 transition"
-                  >
+                  <Link to="/dashboard" onClick={() => setDropdownOpen(false)} className="block px-4 py-2 text-sm hover:bg-gray-50 transition">
+                    📊 Dashboard
+                  </Link>
+                  <Link to="/orders" onClick={() => setDropdownOpen(false)} className="block px-4 py-2 text-sm hover:bg-gray-50 transition">
                     🛍️ Purchase History
+                  </Link>
+                  <Link to="/settings" onClick={() => setDropdownOpen(false)} className="block px-4 py-2 text-sm hover:bg-gray-50 transition">
+                    ⚙️ Settings
                   </Link>
                   <hr className="my-1 border-gray-100" />
                   <button
@@ -87,40 +87,19 @@ const Header = () => {
               )}
             </div>
           ) : (
-            <Link
-              to="/login"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm"
-            >
+            <Link to="/login" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm">
               Login
             </Link>
           )}
         </div>
-
-        {/* Mobile menu toggle */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden"
-          onClick={() => setMobileMenuOpen(true)}
-        >
+        <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileMenuOpen(true)}>
           <Menu className="h-5 w-5" />
         </Button>
       </div>
-
-      {/* Mobile overlay */}
       {mobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
-          onClick={() => setMobileMenuOpen(false)}
-        />
+        <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setMobileMenuOpen(false)} />
       )}
-
-      {/* Mobile drawer */}
-      <div
-        className={`fixed top-0 right-0 h-full w-72 bg-white shadow-xl z-50 md:hidden
-          transform transition-transform duration-300 ease-in-out
-          ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}
-      >
+      <div className={`fixed top-0 right-0 h-full w-72 bg-white shadow-xl z-50 md:hidden transform transition-transform duration-300 ease-in-out ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}>
         <div className="flex justify-between items-center p-4 border-b">
           <span className="text-lg font-bold text-blue-600">Menu</span>
           <button onClick={() => setMobileMenuOpen(false)}>
@@ -137,23 +116,29 @@ const Header = () => {
             onClick={(e) => { setMobileMenuOpen(false); handleCartClick(e); }}
             className="hover:text-blue-600 flex items-center gap-2"
           >
-            <ShoppingCart className="h-4 w-4" /> Cart
+            <ShoppingCart className="h-4 w-4" />
+            Cart
+            {totalItems > 0 && (
+              <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">
+                {totalItems}
+              </span>
+            )}
           </Link>
+
           <hr className="my-1" />
+
           {token ? (
-            <div>
-              <div className="mb-3">
+            <div className="flex flex-col gap-3">
+              <div>
                 <p className="text-sm font-semibold text-gray-800">{user?.name}</p>
                 <p className="text-xs text-gray-400">{user?.email}</p>
               </div>
               {user?.isAdmin && (
-                <Link to="/admin" onClick={() => setMobileMenuOpen(false)} className="block mb-2 hover:text-blue-600">
-                  🛠 Admin Panel
-                </Link>
+                <Link to="/admin" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-600">🛠 Admin Panel</Link>
               )}
-              <Link to="/orders" onClick={() => setMobileMenuOpen(false)} className="block mb-2 hover:text-blue-600">
-                🛍️ Purchase History
-              </Link>
+              <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-600">📊 Dashboard</Link>
+              <Link to="/orders" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-600">🛍️ Purchase History</Link>
+              <Link to="/settings" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-600">⚙️ Settings</Link>
               <button
                 onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
                 className="text-left text-red-500 hover:text-red-700"
@@ -162,18 +147,12 @@ const Header = () => {
               </button>
             </div>
           ) : (
-            <Link
-              to="/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="bg-blue-600 text-white text-center py-2 rounded-lg"
-            >
+            <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="bg-blue-600 text-white text-center py-2 rounded-lg">
               Login
             </Link>
           )}
         </div>
       </div>
-
-      {/* Login Required Dialog */}
       <Dialog open={loginPromptOpen} onOpenChange={setLoginPromptOpen}>
         <DialogContent className="max-w-sm" showCloseButton={false}>
           <DialogHeader>
@@ -183,15 +162,8 @@ const Header = () => {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setLoginPromptOpen(false)}>
-              Cancel
-            </Button>
-            <Button
-              onClick={() => {
-                setLoginPromptOpen(false);
-                navigate("/login");
-              }}
-            >
+            <Button variant="outline" onClick={() => setLoginPromptOpen(false)}>Cancel</Button>
+            <Button onClick={() => { setLoginPromptOpen(false); navigate("/login"); }}>
               Go to Login
             </Button>
           </DialogFooter>
