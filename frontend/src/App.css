@@ -3,6 +3,13 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 
+[role="dialog"] {
+  background-color: white !important;
+}
+
+[role="listbox"] {
+  background-color: white !important;
+}
 @custom-variant dark (&:is(.dark *));
 .counter {
   font-size: 16px;

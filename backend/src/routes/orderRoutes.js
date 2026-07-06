@@ -1,8 +1,10 @@
 import express from "express";
-import { createOrder,getUserOrders,getAllOrders } from "../controller/orderController.js";
+import { createOrder,getUserOrders,getAllOrders,cancelOrder,updateOrderStatus } from "../controller/orderController.js";
 import { authAdmin,adminCheck } from "../middleware/authMiddleware.js";
 const router = express.Router();
 router.post("/",authAdmin, createOrder);
 router.get("/",authAdmin,adminCheck,getAllOrders);
 router.get("/my-orders",authAdmin,getUserOrders);
+router.put("/:id/cancel", authAdmin, cancelOrder);
+router.put("/:id/status", authAdmin, adminCheck, updateOrderStatus);
 export default router;
