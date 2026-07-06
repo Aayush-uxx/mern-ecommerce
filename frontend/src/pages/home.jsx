@@ -4,29 +4,16 @@ import Layout from "../components/layout/layout";
 import ProductCard from "../components/shared/ProductCard";
 import useProducts from "@/hooks/useProducts";
 
-const CATEGORIES = [
-  { name: "Electronics", emoji: "📱", color: "bg-blue-100 text-blue-600" },
-  { name: "Fashion", emoji: "👕", color: "bg-pink-100 text-pink-600" },
-  { name: "Food", emoji: "🍎", color: "bg-green-100 text-green-600" },
-  { name: "Sports", emoji: "⚽", color: "bg-orange-100 text-orange-600" },
-  { name: "Home", emoji: "🏠", color: "bg-purple-100 text-purple-600" },
-];
-
 const Home = () => {
   const { products, loading, fetchProducts } = useProducts();
 
   useEffect(() => {
     fetchProducts();
   }, []);
-
-  // show latest 8 products on home page
   const latestProducts = products.slice(0, 8);
-
   return (
     <Layout>
       <main>
-
-        {/* HERO BANNER */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20 px-4">
           <div className="container mx-auto text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
@@ -51,34 +38,16 @@ const Home = () => {
             </div>
           </div>
         </div>
-
-        {/* PROMO BANNER */}
         <div className="bg-yellow-400 py-4 px-4 text-center">
           <p className="font-semibold text-gray-900">
             ☀️ Summer Sale — Up to 30% Off! Free delivery inside Kathmandu Valley 🚗
           </p>
         </div>
-
-        {/* CATEGORIES */}
         <div className="container mx-auto px-4 py-12">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">Shop by Category</h2>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {CATEGORIES.map((cat) => (
-              <Link
-                key={cat.name}
-                to={`/category/${cat.name}`}
-                className="bg-white rounded-2xl shadow-md p-5 text-center hover:shadow-lg hover:scale-105 transition duration-300"
-              >
-                <div className={`w-14 h-14 ${cat.color} rounded-full flex items-center justify-center text-2xl mx-auto mb-3`}>
-                  {cat.emoji}
-                </div>
-                <p className="font-semibold text-gray-700">{cat.name}</p>
-              </Link>
-            ))}
           </div>
         </div>
-
-        {/* LATEST PRODUCTS */}
         <div className="bg-gray-50 py-12 px-4">
           <div className="container mx-auto">
             <div className="flex justify-between items-center mb-6">
@@ -105,8 +74,6 @@ const Home = () => {
             )}
           </div>
         </div>
-
-        {/* FEATURES STRIP */}
         <div className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
