@@ -14,7 +14,7 @@ const __dirname = path.dirname(__filename);
 dbConnect();
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(cors());
@@ -23,7 +23,11 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 
-app.listen(PORT, () => {
-  console.log(`your server is running on port http://localhost:${PORT}`);
-});
+// Vercel invokes `app` as a serverless function directly, so app.listen()
+// must only run for local/traditional server environments.
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`your server is running on port http://localhost:${PORT}`);
+  });
+}
 export default app;

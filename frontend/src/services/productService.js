@@ -3,8 +3,9 @@ import useAuthStore from "@/stores/authStore";
 
 const getToken = () => useAuthStore.getState().token;
 
-export const getAllProducts = async () => {
-  const { data } = await API.get(`/api/products/`);
+export const getAllProducts = async (limit) => {
+  const url = limit ? `/api/products/?limit=${limit}` : `/api/products/`;
+  const { data } = await API.get(url);
   return data;
 };
 export const createProduct = async ({

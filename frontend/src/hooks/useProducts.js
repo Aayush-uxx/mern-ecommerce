@@ -11,10 +11,10 @@ const useProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (limit) => {
     setLoading(true);
     try {
-      const data = await getAllProducts();
+      const data = await getAllProducts(limit);
       setProducts(data);
     } catch (err) {
       toast.error("No products !");

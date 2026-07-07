@@ -1,7 +1,12 @@
 import product from "../models/product.js";
 const getProducts = async (req, res) => {
   try {
-    const products = await product.find({});
+    const { limit } = req.query;
+    const limitValue = parseInt(limit) || 0;
+
+    const products = await product.find({})
+      .sort({ createdAt: -1 })
+      .limit(limitValue);
 
     res.status(200).json(products);
   } catch (error) {
