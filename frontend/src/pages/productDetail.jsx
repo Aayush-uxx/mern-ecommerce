@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import Layout from "../components/layout/layout";
 import useProducts from "@/hooks/useProducts";
 import useCart from "@/hooks/useCart";
+import { getImageUrl, getPlaceholderImage } from "@/lib/utils";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -61,14 +62,10 @@ const ProductDetail = () => {
             <div className="grid md:grid-cols-2 gap-0">
               <div className="bg-gray-100 h-96 md:h-auto flex items-center justify-center p-8">
                 <img
-                  src={
-                    product.image?.startsWith("http")
-                      ? product.image
-                      : `http://localhost:5000/${product.image}`
-                  }
+                  src={getImageUrl(product.image, "400x300")}
                   alt={product.name}
                   className="max-h-80 object-contain"
-                  onError={(e) => { e.target.src = "https://via.placeholder.com/400x300?text=No+Image"; }}
+                  onError={(e) => { e.target.src = getPlaceholderImage("400x300"); }}
                 />
               </div>
               <div className="p-8">

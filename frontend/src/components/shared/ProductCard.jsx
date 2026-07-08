@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import useCart from "@/hooks/useCart";
+import { getImageUrl, getPlaceholderImage } from "@/lib/utils";
 
 const ProductCard = ({ product }) => {
   const { handleAddToCart } = useCart();
@@ -8,14 +9,10 @@ const ProductCard = ({ product }) => {
     <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden group">
       <div className="relative overflow-hidden h-48 bg-gray-100">
         <img
-          src={
-            product.image?.startsWith("http")
-              ? product.image
-              : `http://localhost:5000/${product.image}`
-          }
+          src={getImageUrl(product.image, "300x200")}
           alt={product.name}
           className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-          onError={(e) => { e.target.src = "https://via.placeholder.com/300x200?text=No+Image"; }}
+          onError={(e) => { e.target.src = getPlaceholderImage("300x200"); }}
         />
         <span className="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
           {product.category}

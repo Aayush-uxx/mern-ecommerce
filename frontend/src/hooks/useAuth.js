@@ -21,7 +21,7 @@ const useAuth = () => {
         navigate("/");
       }
     } catch (err) {
-      toast.error("Invalid email or password!");
+      toast.error(err?.response?.data?.message || "Invalid email or password!");
     } finally {
       setLoading(false);
     }
@@ -34,7 +34,7 @@ const useAuth = () => {
       toast.success("Account created successfully!");
       navigate("/login");
     } catch (err) {
-      toast.error("Registration failed. Try again!");
+      toast.error(err?.response?.data?.message || "Registration failed. Try again!");
     } finally {
       setLoading(false);
     }

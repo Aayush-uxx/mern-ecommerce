@@ -5,6 +5,7 @@ import useCart from "@/hooks/useCart";
 import useAuth from "@/hooks/useAuth";
 import useOrders from "@/hooks/useOrders";
 import toast from "react-hot-toast";
+import { getImageUrl, getPlaceholderImage } from "@/lib/utils";
 
 const Cart = () => {
   const { items, totalPrice, handleRemove, handleQuantityChange, clearCart } = useCart();
@@ -79,14 +80,10 @@ const Cart = () => {
               {items.map((item) => (
                 <div key={item.product._id} className="bg-white rounded-2xl shadow-md p-4 flex gap-4 items-center">
                   <img
-                    src={
-                      item.product.image?.startsWith("http")
-                        ? item.product.image
-                        : `http://localhost:5000/${item.product.image}`
-                    }
+                    src={getImageUrl(item.product.image, "80x80")}
                     alt={item.product.name}
                     className="w-20 h-20 object-cover rounded-xl bg-gray-100"
-                    onError={(e) => { e.target.src = "https://via.placeholder.com/80?text=No+Image"; }}
+                    onError={(e) => { e.target.src = getPlaceholderImage("80x80"); }}
                   />
 
                   <div className="flex-1">
