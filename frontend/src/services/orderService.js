@@ -18,7 +18,7 @@ export const getUserOrder = async () => {
 };
 
 export const getAllOrders = async () => {
-  const { data } = await API.get("/api/orders/", {
+  const { data } = await API.get("/api/orders", {
     headers: { Authorization: `Bearer ${getToken()}` },
   });
   return data;

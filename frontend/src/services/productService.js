@@ -4,7 +4,7 @@ import useAuthStore from "@/stores/authStore";
 const getToken = () => useAuthStore.getState().token;
 
 export const getAllProducts = async (limit) => {
-  const url = limit ? `/api/products/?limit=${limit}` : `/api/products/`;
+  const url = limit ? `/api/products?limit=${limit}` : `/api/products`;
   const { data } = await API.get(url);
   return data;
 };
@@ -23,7 +23,7 @@ export const createProduct = async ({
   formData.append("category", category);
   formData.append("stock", stock);
   formData.append("image", imageFile);
-  const { data } = await API.post(`/api/products/`, formData, {
+  const { data } = await API.post(`/api/products`, formData, {
     headers: { Authorization: `Bearer ${getToken()}` },
   });
   return data;
